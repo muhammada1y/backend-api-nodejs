@@ -11,13 +11,13 @@ const PORT = 3000;
 app.use(bodyParser.json());
 
 mongoose.connect(url, {
-   useNewUrlParser: true,
-   useUnifiedTopology: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 
 
 // Use auth routes
-app.use('/auth', authRoutes);
+app.use('/', authRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

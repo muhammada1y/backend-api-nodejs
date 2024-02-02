@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { secretKey } = require('../config/jwt');
 const router = require('../routes/authRoutes');
-
+const User2 =require('../models/User')
 exports.register = async (req, res) => {
   try {
     // Get values/data from the user request body
@@ -95,3 +95,24 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.registerGoogleUser = async(req,res)=>{
+  try{
+    //get data 
+         const {name, email , password} = req.body
+           console.log(name,email,password);
+           //check if user is in db
+           const userExists = await User2.findOne({ email });
+          if(userExists){
+            return res.status(401).send("This google user is already register")
+           }
+            //ifnot then resgister
+           const user = await User2.create({
+            name,
+            password : hashedPassword,
+            email
+          })
+
+  }catch(err){
+    console.log(err);
+  }
+        }

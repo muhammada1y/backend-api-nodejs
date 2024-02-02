@@ -7,6 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 const { secretKey } = require('../config/jwt');
 
 router.post('/register', authController.register);
+router.post('/googleUser',authController.registerGoogleUser);
 router.post('/login', authController.login);
 router.get('/profile', authMiddleware, (req, res) => {
     jwt.verify(req.token, secretKey, (err, authData) => {
