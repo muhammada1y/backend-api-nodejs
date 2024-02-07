@@ -14,17 +14,22 @@ module.exports = User;
 
 const userSchema2 = mongoose.Schema({
   email: {
-    required: true,
-    unique: true,
     type: String,
+    unique: true,
+    default: null
   },
   name: {
-    required: true,
     type: String,
+    unique: true,
+    default: null
   },
   password: {
     required: false,
     type: String,
+  },
+  role: {
+    type: String,
+    default: "user",
   },
   authSource: {
     type: String,
@@ -33,6 +38,6 @@ const userSchema2 = mongoose.Schema({
   },
 });
 
-const User2 = mongoose.model('User2', userSchema2);
+const UserSchema2 = mongoose.model('googleUser', userSchema2);
 
-module.exports = User2;
+module.exports = UserSchema2;

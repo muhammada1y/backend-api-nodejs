@@ -1,5 +1,7 @@
 // config/database.js
+require('dotenv').config();
+
 module.exports = {
-    url: "mongodb+srv://f1stmain601:ASDasd123@cluster0.jtutx9a.mongodb.net/?retryWrites=true&w=majority",
+    url: process.env.URL,
 };
 

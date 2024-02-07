@@ -5,8 +5,14 @@ const bodyParser = require('body-parser');
 const authRoutes = require('./src/routes/authRoutes');
 const { url } = require('./src/config/database');
 
+require('dotenv').config();
+const cors = require('cors')
+
 const app = express();
-const PORT = 3000;
+app.use(cors())
+app.use(express.json())
+
+const port = process.env.PORT;
 
 app.use(bodyParser.json());
 
@@ -17,8 +23,8 @@ mongoose.connect(url, {
 
 
 // Use auth routes
-app.use('/', authRoutes);
+app.use('/auth', authRoutes);
 
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
 });

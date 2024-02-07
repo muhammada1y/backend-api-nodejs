@@ -3,8 +3,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { secretKey } = require('../config/jwt');
-const router = require('../routes/authRoutes');
-const User2 =require('../models/User')
+const UserSchema2 = require('../models/User')
+
+
 exports.register = async (req, res) => {
   try {
     // Get values/data from the user request body
@@ -33,8 +34,8 @@ exports.register = async (req, res) => {
 
     // Create JWT token
     const token = jwt.sign({
-       id: user._id, username: user.username, role: user.role 
-      }, secretKey, {
+      id: user._id, username: user.username, role: user.role
+    }, secretKey, {
       expiresIn: '1h',
     });
 
@@ -53,7 +54,7 @@ exports.login = async (req, res) => {
   try {
     // Get data from the request body
     const { username, password } = req.body;
-      console.log(username);
+    console.log(username);
     // Check if both username and password are provided
     if (!(username && password)) {
       return res.status(400).send('All fields are required');
@@ -95,24 +96,42 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.registerGoogleUser = async(req,res)=>{
-  try{
-    //get data 
-         const {name, email , password} = req.body
-           console.log(name,email,password);
-           //check if user is in db
-           const userExists = await User2.findOne({ email });
-          if(userExists){
-            return res.status(401).send("This google user is already register")
-           }
-            //ifnot then resgister
-           const user = await User2.create({
-            name,
-            password : hashedPassword,
-            email
-          })
 
-  }catch(err){
-    console.log(err);
+exports.registerGoogleUser = async (req, res) => {
+  try {
+    // Get data from the request body
+    const { name, email, role } = req.body;
+
+    // Check if the user is already in the database
+    const userExists = await UserSchema2.findOne({ email });
+    if (userExists) {
+      return res.status(401).send("This Google user is already registered");
+    }
+
+    // Register the user (assuming you're not storing a password)
+    const googleUser = await UserSchema2.create({
+      name,
+      email,
+      role,
+      authSource: 'google', // Assuming you want to set the authSource to 'google'
+    });
+
+    // Create a token with user information
+    const googleUserToken = jwt.sign(
+      {
+        id: googleUser._id,
+        email: googleUser.email,
+        role: googleUser.role,
+      },
+      secretKey,
+      {
+        expiresIn: "1d",
+      }
+    );
+
+    res.status(200).json({ googleUser, googleUserToken });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-        }
+};

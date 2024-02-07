@@ -1,5 +1,5 @@
 // config/jwt.js
+require('dotenv').config();
 module.exports = {
-    secretKey: 'ali123asd',
-  };
-  
+  secretKey: process.env.SECREKTKEY,
+};
